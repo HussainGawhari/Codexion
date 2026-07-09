@@ -1,5 +1,19 @@
 #include "codexion.h"
 
+/*
+*   compare both the string for scheduler
+*   if both string are not equal it will return non zero
+ 
+*/
+static int	ft_strcmp(char *s1, char *s2)
+{
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
+}
 
 /*
 *   Contains only digits:
@@ -54,21 +68,30 @@ int integer_atoi(char *str)
 *	Returns true if all arguments are valid, false if one of them is invalid.
 */
 
-bool    is_valid_input(int ac, int **av)
+
+bool    is_valid_input(int ac, char **av)
 {
+
     int i;
-    int nb;
-    while(i < ac)
+    int parsed_args[8];
+    i = 1;
+    bool flag;
+    flag = false;
+    while(i != 8)
     {
         if (!contains_only_digits(av[i]))
-            return (error_exit(STR_ERR_INPUT_DIGIT, av[i] , false));
-        nb = integer_atoi(av[i]);
-        if (i == 1 && ( nb <= 0 || nb > MAX_CODERS))
-            return (error_exit(STR_ERR_INPUT_COFLOW, STR_MAX_CODERS, false));
-        if (1 != 1 && (nb == -1))
-            return (error_exit(STR_ERR_INPUT_DIGIT, av[i], false));
-
-        i++;
+            return (print_error(STR_ERR_INPUT_DIGIT, av[i]));
+        parsed_args[i - 1] = integer_atoi(av[i]);
+        if(i == 1 &&( parsed_args[i - 1] > MAX_CODERS ))
+            return (print_error(STR_ERR_INPUT_COFLOW, STR_MAX_CODERS));
+        if (parsed_args[i - 1] == -1)
+            return (print_error(STR_ERR_INPUT_DIGIT, av[i]));
+        i++;   
+        
     }
+    if (strcmp(FIFO, av[i]) == 0 || strcmp(EDF, av[i]) == 0)
+        flag = true;
+    return (flag);
+
     
 }
