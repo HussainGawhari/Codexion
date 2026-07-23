@@ -41,8 +41,10 @@ there must be between 1 and %s coders.\n"
 # define STR_ERR_THREAD	"%s error: Could not create thread.\n"
 # define STR_ERR_MALLOC	"%s error: Could not allocate memory.\n"
 # define STR_ERR_MUTEX	"%s error: Could not create mutex.\n"
-
-
+# define STR_ERR_INPUT_COUNT "%s you need to have 9 arguments"
+# define STR_ERR_INPUT_OVERFLOW "%s you have to many inputs inputs"
+# define STR_ERR_INPUT_VALUE "%s you have invalid inputs"
+# define STR_ERR_INPUT_SCHEDULER "%s provide valid scheduler for me"
 // Action
 # define STR_BURNOUT	"died"
 # define STR_DONGLE		"has taken a dongle"
@@ -111,7 +113,8 @@ typedef struct s_data
 }	t_data;
 
 /* Parsing */
-int		is_valid_input(int ac, char **av, t_data *data);
+int		is_valid_input(t_data *data, char **av);
+int		ft_atoi(const char *str);
 
 /* Init */
 t_data		*init_data(int ac, char **av, int i);
