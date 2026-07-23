@@ -1,4 +1,16 @@
-#include <limits.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/23 16:35:53 by hgawhari          #+#    #+#             */
+/*   Updated: 2026/07/23 16:44:20 by hgawhari         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "codexion.h"
 
 static int	ft_isspace(char c)
 {
@@ -7,7 +19,7 @@ static int	ft_isspace(char c)
 
 static int	ft_sign(char **str)
 {
-	int	sign;
+	int sign;
 
 	sign = 1;
 	if (**str == '-' || **str == '+')
@@ -21,8 +33,8 @@ static int	ft_sign(char **str)
 
 int	ft_atoi(const char *str)
 {
-	int				sign;
-	unsigned long	nb;
+	int sign;
+	unsigned long nb;
 
 	while (ft_isspace(*str))
 		str++;
@@ -39,3 +51,6 @@ int	ft_atoi(const char *str)
 	}
 	return ((int)(nb * sign));
 }
+
+
+

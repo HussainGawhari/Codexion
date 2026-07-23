@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init_dongles.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/23 16:03:59 by 42header.us       #+#    #+#             */
-/*   Updated: 2026/07/23 16:05:58 by hgawhari         ###   ########.fr       */
+/*   Created: 2026/07/23 16:06:38 by hgawhari          #+#    #+#             */
+/*   Updated: 2026/07/23 16:06:39 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int main(int ac, char **av)
+void init_dongles(t_data *data)
 {
-    t_data *data;
-    // data = NULL;
-    memset(&data, 0, sizeof(t_data));
-    if (ac != 9)
-        return (print_error(STR_ERR_INPUT_COUNT, NULL), 0);
-    if (!is_valid_input(&data, av))
-        return (EXIT_FAILURE);
-    init_data(&data);
-    if (!start_simulation(data))
-        return (EXIT_FAILURE);
-    return 0;
+    unsigned int i;
+    int (*cmp)(t_request, t_request);
 }

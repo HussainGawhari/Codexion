@@ -3,7 +3,7 @@
 /*
 *   compare both the string for scheduler
 *   if both string are not equal it will return non zero
- 
+
 */
 static int	ft_strcmp(char *s1, char *s2)
 {
@@ -43,7 +43,7 @@ bool is_valid_input(t_data *data, char **av)
     if (!parse_data(data, parsed_args))
         return (false);
     if (ft_strcmp(av[8], FIFO) == 0 || ft_strcmp(av[8], EDF) == 0)
-        data->scheduler = get_scheduler();
+        parsed_args[i -1] = av[i];
     else
         return (print_error(STR_ERR_INPUT_SCHEDULER, av[8]));
     return (true);
@@ -51,6 +51,8 @@ bool is_valid_input(t_data *data, char **av)
 
 /**
  * here i am trying to inilized basic data
+ * return true if everything goes well
+ * stop if memory allocation fails
  */
 
 bool parse_data(t_data *data, int *args)
@@ -61,13 +63,13 @@ bool parse_data(t_data *data, int *args)
     data->dongles = malloc(sizeof(data->dongles) * args[0]);
     if (!data->dongles)
         return (print_error(STR_ERR_MALLOC, NULL));
-    data->nb_coders = args[0];
-    data->burnout_time = args[1];
-    data->compile_time = args[2];
-    data->debug_time = args[3];
-    data->refactor_time = args[4];
-    data->nb_compiles = args[5];
+    data->number_of_coders = args[0];
+    data->time_to_burnout = args[1];
+    data->time_to_compile = args[2];
+    data->time_to_debug = args[3];
+    data->time_to_refactor = args[4];
+    data->number_of_compiles_required = args[5];
     data->dongle_cooldown = args[6];
+    data->scheduler = args[7];
     return (true);
-    
 }
