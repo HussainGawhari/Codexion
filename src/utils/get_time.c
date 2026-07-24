@@ -1,22 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fifo.c                                             :+:      :+:    :+:   */
+/*   get_time.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/24 10:26:47 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 10:28:31 by hgawhari         ###   ########.fr       */
+/*   Created: 2026/07/24 14:49:54 by hgawhari          #+#    #+#             */
+/*   Updated: 2026/07/24 14:54:20 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	cmp_fifo(t_request a, t_request b)
+unsigned long get_time_ms(void)
 {
-	if (a.arrival_order < b.arrival_order)
-		return (-1);
-	if (a.arrival_order > b.arrival_order)
-		return (1);
-	return (0);
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000UL) + (tv.tv_usec / 1000UL));
+}
+
+void	ft_usleep(unsigned long ms, t_data *data)
+{
+	unsigned long start_time;
+
+	start_time = get_time_ms();
+	while (get_time_ms() - start_time < ms)
+	{
+		/* code */
+		if (!is_running(data))
+			break;
+		usleep(500);
+	}
+
 }

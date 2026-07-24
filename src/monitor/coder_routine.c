@@ -1,45 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor.c                                          :+:      :+:    :+:   */
+/*   coder_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/24 14:56:05 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 16:57:23 by hgawhari         ###   ########.fr       */
+/*   Created: 2026/07/24 16:42:20 by hgawhari          #+#    #+#             */
+/*   Updated: 2026/07/24 16:48:57 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static void check_burnout(t_data *data)
+void	*coder_routine(void *arg)
 {
-	unsigned int i;
-
-	i = 0;
-	while (i < data->number_of_coders)
-	{
-		/* code */
-
-	}
-
-}
-
-void	*monitor_routine(void *arg)
-{
+	t_coder *coder;
 	t_data *data;
 
-	data = (t_data *)arg;
-	while (is_running(data))
+	coder = (t_coder *) arg;
+	data = coder->data;
+	while (is_running(data) && coder->compiles_done < data->number_of_compiles_required)
 	{
-		/* code */
-		check_burout(data);
-		if (!is_running(data))
+		if (!compile_cycle(coder, data))
 			break;
-		check_all_done(data);
-		usleep(1000);
+		log_action(data, coder->id, "is debugging");
+		ft_usleep(data->time_to_debug, data);
+		log_action(data, coder->id, "is refactoring");
+		ft_usleep(data->time_to_refactor, data);
 	}
 	return (NULL);
-
-
 }

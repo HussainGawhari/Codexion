@@ -1,22 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fifo.c                                             :+:      :+:    :+:   */
+/*   init_coders.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/24 10:26:47 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 10:28:31 by hgawhari         ###   ########.fr       */
+/*   Created: 2026/07/24 11:38:43 by hgawhari          #+#    #+#             */
+/*   Updated: 2026/07/24 11:50:16 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	cmp_fifo(t_request a, t_request b)
+void	init_coders(t_data *data)
 {
-	if (a.arrival_order < b.arrival_order)
-		return (-1);
-	if (a.arrival_order > b.arrival_order)
-		return (1);
-	return (0);
+	 unsigned int i;
+
+    i = 0;
+    while (data->number_of_coders)
+    {
+        data->coders[i] = (t_coder){
+            .id = i+1,
+            .compiles_done = 0,
+            .last_compile_ms = 0,
+            .left = &data->dongles[i],
+            .right = &data->dongles[i],
+            .data = data,
+        };
+        pthread_mutex_init(&data->coders[i].mutex, NULL);
+        i++;
+    }
 }

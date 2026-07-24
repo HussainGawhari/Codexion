@@ -43,7 +43,7 @@ bool is_valid_input(t_data *data, char **av)
     if (!parse_data(data, parsed_args))
         return (false);
     if (ft_strcmp(av[8], FIFO) == 0 || ft_strcmp(av[8], EDF) == 0)
-        parsed_args[i -1] = av[i];
+        data->scheduler = av[8];
     else
         return (print_error(STR_ERR_INPUT_SCHEDULER, av[8]));
     return (true);
@@ -70,6 +70,6 @@ bool parse_data(t_data *data, int *args)
     data->time_to_refactor = args[4];
     data->number_of_compiles_required = args[5];
     data->dongle_cooldown = args[6];
-    data->scheduler = args[7];
+    //data->scheduler = args[7];
     return (true);
 }

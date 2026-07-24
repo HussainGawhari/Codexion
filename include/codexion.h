@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:27 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/23 16:06:30 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/24 16:53:33 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ there must be between 1 and %s coders.\n"
 #define MAX_CODERS 300
 
 // Scheduler
-#define FIFO "fifo"
-#define EDF "edf"
+//#define FIFO "fifo"
+//#define EDF "edf"
 
 typedef enum e_scheduler
 {
@@ -145,18 +145,26 @@ typedef struct s_data
 int is_valid_input(t_data *data, char **av);
 int ft_atoi(const char *str);
 
+/*scheduler*/
+int cmp_fifo(t_request a, t_request b);
+int	cmp_edf(t_request a, t_request b);
+
 /* Init */
 void init_data(t_data *data);
 int init_coders(t_data *data);
 
+/*monitoring*/
+void monitor_routine(void *arg);
+void	*coder_routine(void *arg);
+
 /* Threads */
-int start_simulation(t_data *data);
+void start_simulation(t_data *data);
 void *routine(void *arg);
 void *monitor(void *arg);
 
 /* Utils */
 long get_time_ms(void);
-void ft_usleep(long time);
+void ft_usleep(long time, t_data *data);
 void print_status(t_coder *coder, char *msg);
 
 /* Cleanup */
