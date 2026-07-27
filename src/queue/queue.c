@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 17:11:57 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 17:38:04 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/27 16:20:22 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_request  queue_peek(t_queue *q)
 	return (q->head->req);
 }
 
-void 	queue_push(t_queue *q, t_request req)
+void 	push_to_queue(t_queue *q, t_request req)
 {
 	t_node *n;
 	t_node *prev;

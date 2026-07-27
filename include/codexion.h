@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:27 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 16:53:33 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/27 16:40:50 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,8 +159,13 @@ void	*coder_routine(void *arg);
 
 /* Threads */
 void start_simulation(t_data *data);
+void check_all(t_data *data);
 void *routine(void *arg);
 void *monitor(void *arg);
+
+/* queue*/
+void 	push_to_queue(t_dongle *dongle, t_request req);
+t_request  queue_peek(t_queue *q);
 
 /* Utils */
 long get_time_ms(void);

@@ -6,11 +6,27 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 16:42:20 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 16:48:57 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/27 15:56:45 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+static int compile_cycle(t_coder *coder, t_data *data)
+{
+	acquired_dongles(coder, data);
+	if (!is_running(data))
+		return (0);
+	pthread_mutex_lock(&coder->mutex);
+	coder->last_compile_ms = get_time_ms();
+	pthread_mutex_unlock(&coder->mutex);
+	log_action(data, coder->id, "is compiling");
+	ft_usleep(data->time_to_compile, data);
+	release_dongles(coder);
+	pthread_mutex_lock(&coder->mutex);
+	coder->compiles_done++;
+	return (1);
+}
 
 void	*coder_routine(void *arg)
 {
