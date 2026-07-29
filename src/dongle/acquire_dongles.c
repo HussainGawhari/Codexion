@@ -6,13 +6,13 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 15:58:16 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/27 16:49:33 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/28 16:45:48 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static can_take(t_dongle *dongle, unsigned int coder_id)
+static int can_take(t_dongle *dongle, unsigned int coder_id)
 {
 	t_request  top;
 
@@ -26,7 +26,7 @@ static can_take(t_dongle *dongle, unsigned int coder_id)
 	return (1);
 }
 
-static wait_cooldown(t_dongle *dongle, t_data *data)
+static void wait_cooldown(t_dongle *dongle, t_data *data)
 {
 	struct timeval tv;
 	struct timespec ts;
@@ -38,9 +38,15 @@ static wait_cooldown(t_dongle *dongle, t_data *data)
 		return ;
 	remaining = data->dongle_cooldown - elapsed;
 	gettimeofday(&tv, NULL);
-	ts.tv_sec = tv.tv_sec + (tv.tv_sec /1000 + remaining)/ 1000;
-	ts.tv_nsec = ((tv.tv_usec / 1000 + remaining) % 1000 )* 1000000;
+	ts.tv_sec = tv.tv_sec + remaining / 1000;
+	ts.tv_nsec = (tv.tv_usec * 1000) + (remaining % 1000) * 1000000;
 	pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &ts);
+}
+
+int cooldown_ok(t_dongle *dongle, t_data *data)
+{
+	unsigned long elapsed = get_time_ms() - dongle->last_release_ms;
+	return (elapsed >= data->dongle_cooldown);
 }
 
 static void get_dongle(t_coder *coder, t_data *data, t_dongle *dongle)
@@ -75,6 +81,6 @@ void	acquire_dongles(t_coder *coder,  t_data *data)
 	t_dongle *first;
 	t_dongle *second;
 
-	dongle_queue(coder, &first, &second);
+	get_dongle_queue(coder, &first, &second);
 	get_dongle(coder, data, first);
 }

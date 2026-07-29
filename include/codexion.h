@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:27 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/27 16:40:50 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/28 16:46:47 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ there must be between 1 and %s coders.\n"
 #define STR_REFACTOR "is refactoring"
 
 // Max coders
-#define MAX_CODERS 300
+/* MAX_CODERS previously redefined here; keep single definition above */
 
-// Scheduler
-//#define FIFO "fifo"
-//#define EDF "edf"
+// Scheduler string names (use different macro names to avoid enum name collisions)
+#define STR_SCHED_FIFO "fifo"
+#define STR_SCHED_EDF "edf"
 
 typedef enum e_scheduler
 {
@@ -142,7 +142,7 @@ typedef struct s_data
 } t_data;
 
 /* Parsing */
-int is_valid_input(t_data *data, char **av);
+bool is_valid_input(t_data *data, char **av);
 int ft_atoi(const char *str);
 
 /*scheduler*/
@@ -151,29 +151,43 @@ int	cmp_edf(t_request a, t_request b);
 
 /* Init */
 void init_data(t_data *data);
-int init_coders(t_data *data);
+void init_dongles(t_data *data);
+void init_coders(t_data *data);
 
 /*monitoring*/
-void monitor_routine(void *arg);
-void	*coder_routine(void *arg);
+void *monitor_routine(void *arg);
+void *coder_routine(void *arg);
 
 /* Threads */
-void start_simulation(t_data *data);
+/* `start_simulation` is internal to `main.c` and declared static there. */
 void check_all(t_data *data);
-void *routine(void *arg);
-void *monitor(void *arg);
 
-/* queue*/
-void 	push_to_queue(t_dongle *dongle, t_request req);
-t_request  queue_peek(t_queue *q);
+/* queue */
+void init_queue(t_queue *q, int (*cmp)(t_request, t_request));
+t_request queue_peek(t_queue *q);
+void push_to_queue(t_queue *q, t_request req);
+void pop_queue(t_queue *q);
+void destroy_queue(t_queue *q);
+
+/* dongle/queue helpers */
+void acquire_dongles(t_coder *coder, t_data *data);
+void release_dongles(t_coder *coder);
+void get_dongle_queue(t_coder *coder, t_dongle **first, t_dongle **second);
+int cooldown_ok(t_dongle *dongle, t_data *data);
+
+/* utils/helpers */
+int is_running(t_data *data);
+void log_action(t_data *data, unsigned int id, char *action);
+
 
 /* Utils */
-long get_time_ms(void);
-void ft_usleep(long time, t_data *data);
+unsigned long get_time_ms(void);
+void ft_usleep(unsigned long time, t_data *data);
 void print_status(t_coder *coder, char *msg);
 
 /* Cleanup */
 void destroy_all(t_data *data);
+void cleanup(t_data *data);
 int print_error(const char *msg, char *details);
 
 #endif

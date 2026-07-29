@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 17:11:57 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/27 16:20:22 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/29 07:45:38 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ void	init_queue(t_queue *q, int (*cmp)(t_request, t_request))
 	q->cmp = cmp;
 }
 
-t_request  queue_peek(t_queue *q)
+t_request	queue_peek(t_queue *q)
 {
 	return (q->head->req);
 }
 
-void 	push_to_queue(t_queue *q, t_request req)
+void	push_to_queue(t_queue *q, t_request req)
 {
-	t_node *n;
-	t_node *prev;
-	t_node *curr;
+	t_node	*n;
+	t_node	*prev;
+	t_node	*curr;
 
 	n = malloc(sizeof(t_node));
 	if (!n)
@@ -41,7 +41,6 @@ void 	push_to_queue(t_queue *q, t_request req)
 	{
 		prev = curr;
 		curr = curr->next;
-
 	}
 	n->next = curr;
 	if (prev)
@@ -51,23 +50,22 @@ void 	push_to_queue(t_queue *q, t_request req)
 	q->size++;
 }
 
-void queue_pop(t_queue *q)
+void	pop_queue(t_queue *q)
 {
-	t_node *old;
-	t_request  req;
+	t_node	*old;
 
+	if (!q || !q->head)
+		return ;
 	old = q->head;
-	req = old->req;
 	q->head = old->next;
 	free(old);
 	q->size--;
-	return (req);
 }
 
 void	destroy_queue(t_queue *q)
 {
-	t_node *curr;
-	t_node *next;
+	t_node	*curr;
+	t_node	*next;
 
 	curr = q->head;
 	while (curr)

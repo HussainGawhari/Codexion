@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:38 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 11:34:53 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/28 16:39:57 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void init_dongles(t_data *data)
     while (i < data->number_of_coders)
     {
         pthread_mutex_init(&data->dongles[i].mutex, NULL);
-        pthread_mutex_init(&data->dongles[i].cond, NULL);
+        pthread_cond_init(&data->dongles[i].cond, NULL);
         data->dongles[i].available = true;
         data->dongles[i].last_release_ms = 0;
         init_queue(&data->dongles[i].wait_queue, cmp);

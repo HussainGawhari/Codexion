@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 16:42:20 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/27 15:56:45 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/07/28 16:45:18 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int compile_cycle(t_coder *coder, t_data *data)
 {
-	acquired_dongles(coder, data);
+	acquire_dongles(coder, data);
 	if (!is_running(data))
 		return (0);
 	pthread_mutex_lock(&coder->mutex);
