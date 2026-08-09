@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 15:58:16 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/28 16:45:48 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/09 16:10:36 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,11 @@ void	acquire_dongles(t_coder *coder,  t_data *data)
 
 	get_dongle_queue(coder, &first, &second);
 	get_dongle(coder, data, first);
+	if (! is_running(data))
+		return ;
+	log_action(data, coder->id, "has taken a dongle");
+	get_dongle(coder, data, second);
+	if (! is_running(data))
+		return ;
+	log_action(data, coder->id, "has taken a dongle");
 }
