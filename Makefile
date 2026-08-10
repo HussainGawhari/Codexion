@@ -11,9 +11,6 @@ BLUE		= \033[1;34m
 RED			= \033[1;31m
 RESET		= \033[0m
 
-VALGRIND		= valgrind
-VALGRIND_FLAGS	= --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1
-
 SRCS			= \
 				main.c \
 				parsing/parsing.c \
@@ -49,10 +46,6 @@ $(NAME): $(OBJS)
 	@printf "  $(GREEN)LD$(RESET)  %s\n" $@
 	@$(CC) $(OBJS) -o $(NAME) -pthread
 
-valgrind: $(NAME)
-	@printf "  $(BLUE)VG$(RESET)  %s\n" "./$(NAME)"
-	@$(VALGRIND) $(VALGRIND_FLAGS) $(VALGRIND_OPTS) ./$(NAME) $(ARGS)
-
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@printf "  $(BLUE)CC$(RESET)  %s\n" $<
@@ -70,4 +63,4 @@ re: fclean all
 
 -include $(DEPS)
 
-.PHONY: all clean fclean re valgrind
+.PHONY: all clean fclean re

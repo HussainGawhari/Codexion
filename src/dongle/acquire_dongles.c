@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 15:58:16 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 13:13:59 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 16:54:29 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,28 +76,32 @@ static void get_dongle(t_coder *coder, t_data *data, t_dongle *dongle)
 
 }
 
-bool acquire_dongles(t_coder *coder, t_data *data)
+bool	acquire_dongles(t_coder *coder, t_data *data)
 {
 	t_dongle *first;
 	t_dongle *second;
 
 	get_dongle_queue(coder, &first, &second);
 
-	// take first
 	get_dongle(coder, data, first);
 	if (!is_running(data))
 		return false;
+
+	if (first == second) {
+		// if get_dongle() may have claimed first already, release anything held
+		release_dongles(coder);
+		return false;
+	}
+
 	log_action(data, coder->id, "has taken a dongle");
 
-	// must have two distinct dongles to compile
-	if (first == second)
-		return false;
-
-	// take second
 	get_dongle(coder, data, second);
-	if (!is_running(data))
+	if (!is_running(data)) {
+		// release the first dongle that may still be held
+		release_dongles(coder);
 		return false;
-	log_action(data, coder->id, "has taken a dongle");
+	}
 
+	log_action(data, coder->id, "has taken a dongle");
 	return true;
 }
