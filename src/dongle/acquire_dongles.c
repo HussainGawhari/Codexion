@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 15:58:16 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 16:54:29 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 19:23:40 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 static int can_take(t_dongle *dongle, unsigned int coder_id)
 {
-	t_request  top;
+	t_task  top;
 
 	if (dongle->wait_queue.size == 0)
 		return (0);
-	top = queue_peek(&dongle->wait_queue);
+	top = queue_top(&dongle->wait_queue);
 	if (top.coder_id != coder_id)
 		return (0);
 	if (!dongle->available)
@@ -43,7 +43,7 @@ static void wait_cooldown(t_dongle *dongle, t_data *data)
 	pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &ts);
 }
 
-int cooldown_ok(t_dongle *dongle, t_data *data)
+int is_dongle_ready(t_dongle *dongle, t_data *data)
 {
 	unsigned long elapsed = get_time_ms() - dongle->last_release_ms;
 	return (elapsed >= data->dongle_cooldown);
@@ -51,7 +51,7 @@ int cooldown_ok(t_dongle *dongle, t_data *data)
 
 static void get_dongle(t_coder *coder, t_data *data, t_dongle *dongle)
 {
-	t_request req;
+	t_task req;
 
 	req.coder_id = coder->id;
 	req.deadline = coder->last_compile_ms + data->time_to_burnout;
@@ -59,17 +59,17 @@ static void get_dongle(t_coder *coder, t_data *data, t_dongle *dongle)
 	req.arrival_order = data->request_counter++;
 	pthread_mutex_unlock(&data->counter_mutex);
 	pthread_mutex_lock(&dongle->mutex);
-	push_to_queue(&dongle->wait_queue, req);
-	while (is_running(data) && (!can_take(dongle, coder->id) || !cooldown_ok(dongle, data)))
+	queue_push(&dongle->wait_queue, req);
+	while (simulation_is_running(data) && (!can_take(dongle, coder->id) || !is_dongle_ready(dongle, data)))
 	{
 		if (can_take(dongle, coder->id))
 			wait_cooldown(dongle, data);
 		else
 			pthread_cond_wait(&dongle->cond, &dongle->mutex);
 	}
-	if (is_running(data))
+	if (simulation_is_running(data))
 	{
-		pop_queue(&dongle->wait_queue);
+		queue_pop(&dongle->wait_queue);
 		dongle->available =false;
 	}
 	pthread_mutex_unlock(&dongle->mutex);
@@ -81,27 +81,27 @@ bool	acquire_dongles(t_coder *coder, t_data *data)
 	t_dongle *first;
 	t_dongle *second;
 
-	get_dongle_queue(coder, &first, &second);
+	get_left_right_dongles(coder, &first, &second);
 
 	get_dongle(coder, data, first);
-	if (!is_running(data))
+	if (!simulation_is_running(data))
 		return false;
 
 	if (first == second) {
 		// if get_dongle() may have claimed first already, release anything held
-		release_dongles(coder);
+		release_dongles_for_coder(coder);
 		return false;
 	}
 
-	log_action(data, coder->id, "has taken a dongle");
+	log_event(data, coder->id, "has taken a dongle");
 
 	get_dongle(coder, data, second);
-	if (!is_running(data)) {
+	if (!simulation_is_running(data)) {
 		// release the first dongle that may still be held
-		release_dongles(coder);
+		release_dongles_for_coder(coder);
 		return false;
 	}
 
-	log_action(data, coder->id, "has taken a dongle");
+	log_event(data, coder->id, "has taken a dongle");
 	return true;
 }

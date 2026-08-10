@@ -113,4 +113,4 @@ Here we break **circular wait**: dongles are always acquired in a fixed global o
   - `log_mutex`, `simulation_mutex`, `counter_mutex` protect logging, the `running` flag, and the global request counter respectively
 - **`pthread_cond_t`** — coders enqueue a request then block on `dongle->cond`; on release, `pthread_cond_broadcast` wakes all waiters so the scheduler picks the next owner — no busy-waiting
 - **Wait queue** — each dongle holds a queue of `{coder_id, deadline, arrival_order}` records consulted under `dongle->mutex`, making scheduling decisions race-free
-- **Shutdown coordination** — the monitor sets `running = false` under `simulation_mutex` then calls `wake_all()` (broadcasts every dongle's cond), so blocked coders wake, re-check `is_running()`, and exit cleanly
+- **Shutdown coordination** — the monitor sets `running = false` under `simulation_mutex` then calls `wake_all()` (broadcasts every dongle's cond), so blocked coders wake, re-check `simulation_is_running()`, and exit cleanly

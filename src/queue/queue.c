@@ -6,25 +6,25 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 17:11:57 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/29 07:45:38 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 19:35:30 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	init_queue(t_queue *q, int (*cmp)(t_request, t_request))
+void	queue_init(t_queue *q, int (*cmp)(t_task, t_task))
 {
 	q->head = NULL;
 	q->size = 0;
 	q->cmp = cmp;
 }
 
-t_request	queue_peek(t_queue *q)
+t_task	queue_top(t_queue *q)
 {
 	return (q->head->req);
 }
 
-void	push_to_queue(t_queue *q, t_request req)
+void	queue_push(t_queue *q, t_task req)
 {
 	t_node	*n;
 	t_node	*prev;
@@ -50,7 +50,7 @@ void	push_to_queue(t_queue *q, t_request req)
 	q->size++;
 }
 
-void	pop_queue(t_queue *q)
+void	queue_pop(t_queue *q)
 {
 	t_node	*old;
 
@@ -62,7 +62,7 @@ void	pop_queue(t_queue *q)
 	q->size--;
 }
 
-void	destroy_queue(t_queue *q)
+void	queue_destroy(t_queue *q)
 {
 	t_node	*curr;
 	t_node	*next;

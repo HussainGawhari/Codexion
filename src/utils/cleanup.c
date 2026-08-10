@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 16:58:33 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/09 22:18:40 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 19:15:49 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void cleanup_dongles(t_data *data)
 	{
 		pthread_mutex_destroy(&data->dongles[i].mutex);
 		pthread_cond_destroy(&data->dongles[i].cond);
-		destroy_queue(&data->dongles[i].wait_queue);
+		queue_destroy(&data->dongles[i].wait_queue);
 		i++;
 	}
 

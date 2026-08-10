@@ -22,6 +22,7 @@ SRCS			= \
 				dongle/acquire_dongles.c \
 				dongle/dongle_queue.c \
 				dongle/release_dongle.c \
+				simulation/simulation.c \
 				queue/queue.c \
 				scheduler/scheduler.c \
 				utils/logger.c \
@@ -29,7 +30,6 @@ SRCS			= \
 				utils/ft_atoi.c \
 				utils/get_time.c \
 				utils/cleanup.c \
-				utils/memory.c \
 				utils/time.c \
 				coder/coder.c \
 				coder/coder_lifecycle.c \

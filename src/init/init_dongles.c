@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:38 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 10:16:28 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 19:23:40 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void init_dongles(t_data *data)
 {
     unsigned int i;
-    int (*cmp)(t_request, t_request);
+    int (*cmp)(t_task, t_task);
     if (data->scheduler == FIFO)
         cmp = cmp_fifo;
     else
@@ -28,7 +28,7 @@ void init_dongles(t_data *data)
         pthread_cond_init(&data->dongles[i].cond, NULL);
         data->dongles[i].available = true;
         data->dongles[i].last_release_ms = 0;
-        init_queue(&data->dongles[i].wait_queue, cmp);
+        queue_init(&data->dongles[i].wait_queue, cmp);
         i++;
     }
 

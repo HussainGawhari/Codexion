@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 14:49:54 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/24 14:54:20 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 19:19:09 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_usleep(unsigned long ms, t_data *data)
 	while (get_time_ms() - start_time < ms)
 	{
 		/* code */
-		if (!is_running(data))
+		if (!simulation_is_running(data))
 			break;
 		usleep(500);
 	}

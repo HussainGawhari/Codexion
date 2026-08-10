@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 14:56:05 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 10:16:20 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 19:30:16 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	handle_burnout(t_data *data, unsigned int idx, unsigned long now)
 	data->running = false;
 	pthread_mutex_unlock(&data->simulation_mutex);
 	pthread_mutex_unlock(&data->log_mutex);
-	check_all(data);
+	check_simulation_end(data);
 }
 
 static void	check_burnout(t_data *data)
@@ -47,7 +47,7 @@ static void	check_burnout(t_data *data)
 	}
 }
 
-static void	check_all_done(t_data *data)
+static void	check_simulation_end_done(t_data *data)
 {
 	unsigned int	i;
 
@@ -66,21 +66,21 @@ static void	check_all_done(t_data *data)
 	pthread_mutex_lock(&data->simulation_mutex);
 	data->running = false;
 	pthread_mutex_unlock(&data->simulation_mutex);
-	check_all(data);
+	check_simulation_end(data);
 }
 
-
-void	*monitor_routine(void *arg)
+// monitor_loop
+void	*monitor_simulation(void *arg)
 {
 	t_data	*data;
 
 	data = (t_data *)arg;
-	while (is_running(data))
+	while (simulation_is_running(data))
 	{
 		check_burnout(data);
-		if (!is_running(data))
+		if (!simulation_is_running(data))
 			break ;
-		check_all_done(data);
+		check_simulation_end_done(data);
 		usleep(1000);
 	}
 	return (NULL);
