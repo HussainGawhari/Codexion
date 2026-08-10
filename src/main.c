@@ -59,7 +59,11 @@ static void start_simulation(t_data *data)
     check_all(data);
     i = 0;
     while (i < data->number_of_coders)
-        pthread_join(data->coders[i].thread,NULL);
+    {
+        pthread_join(data->coders[i].thread, NULL);
+        i++;
+    }
+	 pthread_join(data->monitor_thread, NULL);
 
 }
 

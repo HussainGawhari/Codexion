@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/29 07:48:38 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/29 07:48:39 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/09 22:18:38 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,19 @@ static int	ft_strcmp(char *s1, char *s2)
 
 static bool parse_data(t_data *data, int *args);
 
+static bool is_positive_integer(const char *str)
+{
+    if (!str || !*str)
+        return (false);
+    while (*str)
+    {
+        if (*str < '0' || *str > '9')
+            return (false);
+        str++;
+    }
+    return (true);
+}
+
 bool is_valid_input(t_data *data, char **av)
 {
     int parsed_args[8];
@@ -45,6 +58,11 @@ bool is_valid_input(t_data *data, char **av)
     i = 1;
     while (i < 8)
     {
+        if (!is_positive_integer(av[i]))
+        {
+            print_error(STR_ERR_INPUT_VALUE, av[i]);
+            return (false);
+        }
         parsed_args[i - 1] = ft_atoi(av[i]);
         if (parsed_args[i - 1] == -1)
         {

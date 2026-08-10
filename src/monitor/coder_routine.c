@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 16:42:20 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/09 14:31:51 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/09 22:17:21 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static int compile_cycle(t_coder *coder, t_data *data)
 	release_dongles(coder);
 	pthread_mutex_lock(&coder->mutex);
 	coder->compiles_done++;
+	pthread_mutex_unlock(&coder->mutex);
 	return (1);
 }
 
