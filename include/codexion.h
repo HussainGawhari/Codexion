@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:27 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/07/28 16:46:47 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 13:12:19 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void pop_queue(t_queue *q);
 void destroy_queue(t_queue *q);
 
 /* dongle/queue helpers */
-void acquire_dongles(t_coder *coder, t_data *data);
+bool acquire_dongles(t_coder *coder, t_data *data);
 void release_dongles(t_coder *coder);
 void get_dongle_queue(t_coder *coder, t_dongle **first, t_dongle **second);
 int cooldown_ok(t_dongle *dongle, t_data *data);

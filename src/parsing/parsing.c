@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/29 07:48:38 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/09 22:18:38 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/10 12:53:12 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 *   if both string are not equal it will return non zero
 
 */
+
 static int	ft_strcmp(char *s1, char *s2)
 {
 	while (*s1 && *s2 && *s1 == *s2)
@@ -27,16 +28,9 @@ static int	ft_strcmp(char *s1, char *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-/* is_valid_input:
-*	Checks if all required arguments are valid, i.e. is a string of
-*	digits only, which does not exceed INT MAX. Also checks if the number
-*	of philosophers is valid (between 1 and MAX_PHILOS).
-*	Returns true if all arguments are valid, false if one of them is invalid.
+/*
+    * check if the integer we receives are positive or not
 */
-
-
-static bool parse_data(t_data *data, int *args);
-
 static bool is_positive_integer(const char *str)
 {
     if (!str || !*str)
@@ -50,50 +44,6 @@ static bool is_positive_integer(const char *str)
     return (true);
 }
 
-bool is_valid_input(t_data *data, char **av)
-{
-    int parsed_args[8];
-    int i;
-
-    i = 1;
-    while (i < 8)
-    {
-        if (!is_positive_integer(av[i]))
-        {
-            print_error(STR_ERR_INPUT_VALUE, av[i]);
-            return (false);
-        }
-        parsed_args[i - 1] = ft_atoi(av[i]);
-        if (parsed_args[i - 1] == -1)
-        {
-            print_error(STR_ERR_INPUT_OVERFLOW, av[i]);
-            return (false);
-        }
-        if (parsed_args[i - 1] <= 0)
-        {
-            print_error(STR_ERR_INPUT_VALUE, av[i]);
-            return (false);
-        }
-        if (i == 1 && parsed_args[0] > MAX_CODERS)
-        {
-            print_error(STR_ERR_INPUT_COFLOW, STR_MAX_CODERS);
-            return (false);
-        }
-        i++;
-    }
-    if (!parse_data(data, parsed_args))
-        return (false);
-    if (ft_strcmp(av[8], STR_SCHED_FIFO) == 0)
-        data->scheduler = FIFO;
-    else if (ft_strcmp(av[8], STR_SCHED_EDF) == 0)
-        data->scheduler = EDF;
-    else
-    {
-        print_error(STR_ERR_INPUT_SCHEDULER, av[8]);
-        return (false);
-    }
-    return (true);
-}
 
 /**
  * here i am trying to inilized basic data
@@ -124,5 +74,57 @@ static bool parse_data(t_data *data, int *args)
     data->number_of_compiles_required = args[5];
     data->dongle_cooldown = args[6];
     /* scheduler set from argv[8] in is_valid_input */
+    return (true);
+}
+
+/* is_valid_input:
+*	Checks if all required arguments are valid, i.e. is a string of
+*	digits only, which does not exceed INT MAX. Also checks if the number
+*	of philosophers is valid (between 1 and MAX_PHILOS).
+*	Returns true if all arguments are valid, false if one of them is invalid.
+*/
+
+bool is_valid_input(t_data *data, char **av)
+{
+    int parsed_args[8];
+    int i;
+
+    i = 1;
+    while (i < 8)
+    {
+        if (!is_positive_integer(av[i]))
+        {
+            print_error(STR_ERR_INPUT_VALUE, av[i]);
+            return (false);
+        }
+        parsed_args[i - 1] = ft_atoi(av[i]);
+        if (parsed_args[i - 1] == -1)
+        {
+            print_error(STR_ERR_INPUT_OVERFLOW, av[i]);
+            return (false);
+        }
+        if (parsed_args[i - 1] < 0)
+        {
+            print_error(STR_ERR_INPUT_VALUE, av[i]);
+            return (false);
+        }
+        if (i == 1 && parsed_args[0] > MAX_CODERS)
+        {
+            print_error(STR_ERR_INPUT_COFLOW, STR_MAX_CODERS);
+            return (false);
+        }
+        i++;
+    }
+    if (!parse_data(data, parsed_args))
+        return (false);
+    if (ft_strcmp(av[8], STR_SCHED_FIFO) == 0)
+        data->scheduler = FIFO;
+    else if (ft_strcmp(av[8], STR_SCHED_EDF) == 0)
+        data->scheduler = EDF;
+    else
+    {
+        print_error(STR_ERR_INPUT_SCHEDULER, av[8]);
+        return (false);
+    }
     return (true);
 }

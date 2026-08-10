@@ -1,6 +1,5 @@
 *This project has been created as part of the 42 curriculum by hgawhari.*
 
-![Codexion](assets/banner.png)
 
 ## Table of Contents
 - [Description](#description)
@@ -56,7 +55,7 @@ Example:
 
 ## `📝` Logging format
 
-Every state change is printed on its own line with a timestamp in milliseconds and the coder id. 
+Every state change is printed on its own line with a timestamp in milliseconds and the coder id.
 
 e.g:
 ```
