@@ -17,23 +17,18 @@ SRCS			= \
 				init/init_data.c \
 				init/init_coders.c \
 				init/init_dongles.c \
-				monitor/coder_routine.c \
 				monitor/monitor.c \
 				dongle/acquire_dongles.c \
 				dongle/dongle_queue.c \
 				dongle/release_dongle.c \
 				simulation/simulation.c \
 				queue/queue.c \
-				scheduler/scheduler.c \
 				utils/logger.c \
-				utils/exit.c \
 				utils/ft_atoi.c \
 				utils/get_time.c \
 				utils/cleanup.c \
-				utils/time.c \
-				coder/coder.c \
-				coder/coder_lifecycle.c \
-				coder/coder_actions.c \
+				utils/exit.c \
+				coder/coder_routine.c \
 				scheduler/edf.c \
 				scheduler/fifo.c
 
