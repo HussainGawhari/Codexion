@@ -1,6 +1,6 @@
 NAME		= codexion
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -pthread -Iinclude -MMD -MP
+CFLAGS		= -Wall -Wextra -Werror -pthread -Iinclude
 MAKEFLAGS	= --no-print-directory
 
 SRCS_DIR	= src
@@ -33,7 +33,6 @@ SRCS			= \
 				scheduler/fifo.c
 
 OBJS		= $(addprefix $(OBJS_DIR)/,$(SRCS:.c=.o))
-DEPS		= $(OBJS:.o=.d)
 
 all: $(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 15:58:16 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 19:23:40 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/16 09:44:56 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,32 +76,29 @@ static void get_dongle(t_coder *coder, t_data *data, t_dongle *dongle)
 
 }
 
-bool	acquire_dongles(t_coder *coder, t_data *data)
+bool acquire_dongles(t_coder *coder, t_data *data)
 {
-	t_dongle *first;
-	t_dongle *second;
+    t_dongle *first;
+    t_dongle *second;
 
-	get_left_right_dongles(coder, &first, &second);
+    get_left_right_dongles(coder, &first, &second);
 
-	get_dongle(coder, data, first);
-	if (!simulation_is_running(data))
-		return false;
+    if (first == second)
+        return false;
 
-	if (first == second) {
-		// if get_dongle() may have claimed first already, release anything held
-		release_dongles_for_coder(coder);
-		return false;
-	}
+    get_dongle(coder, data, first);
+    if (!simulation_is_running(data))
+        return false;
 
-	log_event(data, coder->id, "has taken a dongle");
+    get_dongle(coder, data, second);
+    if (!simulation_is_running(data))
+    {
+        release_dongles_for_coder(coder);
+        return false;
+    }
 
-	get_dongle(coder, data, second);
-	if (!simulation_is_running(data)) {
-		// release the first dongle that may still be held
-		release_dongles_for_coder(coder);
-		return false;
-	}
+    log_event(data, coder->id, "has taken a dongle");
+    log_event(data, coder->id, "has taken a dongle");
 
-	log_event(data, coder->id, "has taken a dongle");
-	return true;
+    return true;
 }

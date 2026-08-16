@@ -1,116 +1,463 @@
 *This project has been created as part of the 42 curriculum by hgawhari.*
 
+---
 
 ## Table of Contents
+
 - [Description](#description)
+- [Features](#features)
+- [Requirements](#requirements)
 - [Instructions](#instructions)
 - [Command-line arguments](#command-line-arguments)
-- [Logging format](#logging-format)
+- [Concurrency and synchronization](#concurrency-and-synchronization)
+- [Deadlock prevention](#deadlock-prevention)
+- [Testing](#testing)
 - [Resources](#resources)
 
 ---
 
-## `🔍` Description
+## 🔍 Description
 
-**Codexion** is a concurrency simulation written in C, inspired by the classic **Dining Philosophers problem**. In this scenario, multiple "coder" threads compete for a limited number of USB dongles to perform compilation tasks.
+**Codexion** is a concurrency simulation inspired by the classic
+**Dining Philosophers problem**.
 
-This implementation illustrates the philosopher theorem in practice: how multiple concurrent actors can safely share limited resources without deadlocks or starvation, while respecting strict timing constraints.
+Instead of philosophers competing for forks, Codexion models **coders competing
+for USB dongles**.
 
----
+Each coder:
 
-## `🚀` Instructions
+1. Requests two dongles.
+2. Waits until the required dongles can be acquired.
+3. Compiles.
+4. Releases the dongles.
+5. Debugs.
+6. Refactors.
+7. Repeats until the required number of compilations is reached.
 
-Build with the provided Makefile. The project compiles with -Wall -Wextra -Werror and links pthread.
+The simulation demonstrates how multiple concurrent threads can safely share
+limited resources while handling:
+
+- Resource contention
+- Scheduling policies
+- Condition variables
+- Mutex synchronization
+- Deadlock prevention
+- Resource cooldown periods
+- Burnout deadlines
+- Clean thread shutdown
+- Serialized logging
+
+
+## 🚀 Instructions
+
+Clone the repository and enter the project directory.
+
+### Build
 
 ```bash
-# from project root
 make
-
-# run the program (example)
-./codexion 4 1500 200 200 200 3 100 fifo
 ```
+
+### Clean object files
+
+```bash
+make clean
+```
+
+### Remove all generated files
+
+```bash
+make fclean
+```
+
+### Rebuild from scratch
+
+```bash
+make re
+```
+
+### Run
+
+```bash
+./codexion <number_of_coders> <time_to_burnout> \
+<time_to_compile> <time_to_debug> <time_to_refactor> \
+<number_of_compiles_required> <dongle_cooldown> <scheduler>
+```
+| Argument                      | Description                                        |
+| ----------------------------- | -------------------------------------------------- |
+| `number_of_coders`            | Number of coder threads                            |
+| `time_to_burnout`             | Maximum time (ms) before a coder burns out         |
+| `time_to_compile`             | Compilation duration (ms)                          |
+| `time_to_debug`               | Debugging duration (ms)                            |
+| `time_to_refactor`            | Refactoring duration (ms)                          |
+| `number_of_compiles_required` | Number of compilations required per coder          |
+| `dongle_cooldown`             | Time (ms) a dongle stays unavailable after release |
+| `scheduler`                   | Scheduling policy: `fifo`, `lifo`, or `edf`        |
+
+
+# 📊 Schedulers
+
+Each dongle maintains its own waiting queue.
+
+Every request contains:
+
+```c
+typedef struct s_task
+{
+    unsigned int    coder_id;
+    long            deadline;
+    unsigned long   arrival_order;
+} t_task;
+```
+
+The scheduler comparator determines which waiting request reaches the
+front of the queue.
 
 ---
 
-## `⚙️` Command-line arguments
+## FIFO — First In, First Out
 
-All arguments are mandatory and must be positive integers except `scheduler` which must be `fifo` or `edf`.
+FIFO gives priority to the request that arrived first.
 
-1. number_of_coders -> number of coders
-2. time_to_burnout (ms) -> deadline: if a coder does not start compiling before this window since their last compile or simulation start, they burn out
-3. time_to_compile (ms)
-4. time_to_debug (ms)
-5. time_to_refactor (ms)
-6. number_of_compiles_required -> simulation ends when every coder reached this compile count
-7. dongle_cooldown (ms) -> after a dongle is released it is unavailable for this cooldown
-8. scheduler -> `fifo` (First In, First Out) or `edf` (Earliest Deadline First)
+Conceptually:
+
+```text
+Arrival:
+
+Coder 1 → Coder 2 → Coder 3
+
+Grant:
+
+Coder 1 → Coder 2 → Coder 3
+```
+
+The implementation compares `arrival_order`.
+
+
+## EDF — Earliest Deadline First
+
+EDF gives priority to the request with the earliest deadline.
+
+Each request stores:
+
+```c
+long deadline;
+```
+
+The scheduler compares the deadlines to determine priority.
+
+When deadlines are equal, the scheduler uses the project's defined
+tie-breaking rule.
+
+
+# 🏗️ Architecture
+
+The simulation is organized around four main concepts:
+
+```text
+                    ┌──────────────────┐
+                    │      t_data      │
+                    │   global state   │
+                    └────────┬─────────┘
+                             │
+              ┌──────────────┴──────────────┐
+              │                             │
+       ┌──────▼──────┐               ┌──────▼──────┐
+       │   Coders    │               │   Dongles   │
+       │  pthreads   │               │   resources │
+       └──────┬──────┘               └──────┬──────┘
+              │                             │
+              │ requests                    │
+              └─────────────┬───────────────┘
+                            │
+                     ┌──────▼──────┐
+                     │ Wait Queue  │
+                     │             │
+                     │ FIFO/EDF/   │
+                     └─────────────┘
+```
+
+### Coder
+
+Each coder has:
+
+* A unique ID
+* Compilation counter
+* Last compilation timestamp
+* Two associated dongles
+* A pthread
+* A mutex
+* A reference to global simulation data
+
+### Dongle
+
+Each dongle has:
+
+* Its own mutex
+* Availability state
+* Last release timestamp
+* Its own waiting queue
+* A condition variable
+
+### Queue
+
+Each dongle maintains a linked-list waiting queue containing scheduling
+requests.
+
+---
+
+# 🔧 Concurrency and synchronization
+
+Codexion uses POSIX synchronization primitives to coordinate access to shared
+resources.
+
+## `pthread_mutex_t`
+
+Mutexes protect shared state.
+
+### Coder mutex
+
+Protects coder-specific state such as:
+
+```text
+last_compile_ms
+compiles_done
+```
+
+### Dongle mutex
+
+Protects:
+
+```text
+available
+last_release_ms
+wait_queue
+```
+
+### Log mutex
+
+Ensures that log messages from different threads do not interleave.
+
+### Simulation mutex
+
+Protects the global `running` state.
+
+### Counter mutex
+
+Protects the global request counter used to assign
+`arrival_order`.
+
+---
+
+## `pthread_cond_t`
+
+Each dongle has a condition variable:
+
+```c
+pthread_cond_t cond;
+```
+
+A coder that cannot currently acquire a dongle waits on the condition variable
+instead of continuously polling.
+
+When a dongle is released:
+
+```c
+pthread_cond_broadcast(&dongle->cond);
+```
+
+waiting coders are awakened and re-evaluate the scheduler.
+
+This avoids unnecessary busy-waiting.
+
+---
+
+# 🛡️ Deadlock prevention
+
+A classic deadlock requires the four Coffman conditions:
+
+| Condition        | Meaning                                               |
+| ---------------- | ----------------------------------------------------- |
+| Mutual exclusion | A resource can only be held by one thread             |
+| Hold and wait    | A thread holds one resource while waiting for another |
+| No preemption    | A resource cannot be forcibly taken                   |
+| Circular wait    | Threads form a circular dependency                    |
+
+Codexion prevents **circular wait** by imposing a global ordering on dongle
+acquisition.
+
+Each coder determines its two dongles and acquires them in ascending dongle
+index order.
+
+For example:
+
+```text
+Coder 1:
+    dongle 0 → dongle 1
+
+Coder 2:
+    dongle 1 → dongle 2
+
+Coder 3:
+    dongle 2 → dongle 3
+```
+
+This prevents a circular dependency such as:
+
+```text
+Coder A → waiting for B
+Coder B → waiting for A
+```
+
+because all coders follow the same global ordering.
+
+---
+
+# ⏱️ Dongle cooldown
+
+After a dongle is released, it records:
+
+```c
+last_release_ms
+```
+
+The next request cannot use the dongle until:
+
+```text
+current_time - last_release_ms >= dongle_cooldown
+```
+
+This is handled through the dongle's condition variable and avoids unnecessary
+busy-waiting.
 
 Example:
 
 ```bash
-./codexion 4 1500 200 200 200 5 100 edf
+./codexion 5 3000 200 200 200 5 800 fifo
+```
+
+Here, every released dongle must remain unavailable for `800 ms`.
+
+---
+
+# 💀 Burnout detection
+
+A dedicated monitor thread watches coder deadlines.
+
+Each coder records the timestamp of its latest compilation:
+
+```c
+long last_compile_ms;
+```
+
+If the time since the coder's last successful compilation exceeds
+`time_to_burnout`, the coder burns out and the simulation is stopped.
+
+Example:
+
+```text
+3000 1 burned out
+```
+
+The monitor coordinates shutdown so that waiting coder threads are awakened
+and can terminate cleanly.
+
+---
+
+# 🧵 Thread lifecycle
+
+The simulation consists of:
+
+```text
+Main thread
+    │
+    ├── Coder thread 1
+    ├── Coder thread 2
+    ├── Coder thread 3
+    ├── ...
+    └── Monitor thread
+```
+
+A coder repeatedly performs:
+
+```text
+        ┌───────────────┐
+        │ Acquire 2     │
+        │ dongles        │
+        └───────┬───────┘
+                │
+                ▼
+           Compiling
+                │
+                ▼
+          Release dongles
+                │
+                ▼
+            Debugging
+                │
+                ▼
+           Refactoring
+                │
+                ▼
+        More compilations?
+           /          \
+         yes           no
+          │             │
+          └──────┐      ▼
+                 │     exit
+                 ▼
+             Acquire
 ```
 
 ---
 
-## `📝` Logging format
+# 🧪 Testing
 
-Every state change is printed on its own line with a timestamp in milliseconds and the coder id.
+The project includes a `tests/` directory for shell-based tests.
 
-e.g:
-```
-0 1 has taken a dongle
-1 1 has taken a dongle
-1 1 is compiling
-201 1 is debugging
-401 1 is refactoring
-1204 3 burned out
+Useful manual tests include:
+
+### Basic FIFO
+
+```bash
+./codexion 2 2000 200 200 200 2 0 fifo
 ```
 
----
+### EDF contention
 
-## `📁` Resources
+```bash
+./codexion 5 3000 200 200 200 10 800 edf
+```
 
-- [Dining philosophers problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
-- [POSIX threads documentation](https://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html)
+### Cooldown
 
-### AI usage
+```bash
+./codexion 5 3000 200 200 200 5 800 fifo
+```
 
-- Identifying edge-case failures.
-- Drafting and polishing this README.
+### Burnout
 
----
-
-## `🛡️` Blocking cases handled
-
-### Deadlock prevention
-
-A deadlock requires all four **Coffman conditions** to hold simultaneously:
-
-| # | Condition         | Meaning                                                          |
-|---|-------------------|------------------------------------------------------------------|
-| 1 | Mutual exclusion  | A resource can only be held by one thread at a time              |
-| 2 | Hold and wait     | A thread holds a resource while waiting for another              |
-| 3 | No preemption     | Resources cannot be forcibly taken from a thread                 |
-| 4 | Circular wait     | A cycle of threads exists, each waiting on the next              |
-
-Here we break **circular wait**: dongles are always acquired in a fixed global order (lowest index first, see `src/dongles/dongle_order.c`), so no cycle of waits can form.
-
-### Other concurrency hazards
-
-- **Starvation prevention** — each request records an `arrival_order` and a `deadline`; the scheduler (FIFO or EDF) services coders deterministically so none is indefinitely bypassed.
-- **Cooldown handling** — after release, each dongle enforces a configurable `dongle_cooldown` via `last_release_ms` before it can be re-acquired.
-- **Burnout detection** — a dedicated monitor thread periodically reads each coder's `last_compile_ms` and triggers a clean shutdown if `time_to_burnout` is exceeded.
-- **Log serialization** — all output is serialized under `log_mutex`, preventing interleaved lines and inconsistent timestamps.
+Use a small burnout time relative to the workload to verify that the monitor
+detects missed deadlines.
 
 ---
 
-## `🔧` Thread synchronization mechanisms
+# 📚 Resources
 
-- **`pthread_mutex_t`** — per-object mutexes protect all shared fields:
-  - `coder->mutex` guards `last_compile_ms` and `compiles_done`; the monitor locks this same mutex when reading, preventing torn reads
-  - `dongle->mutex` guards `available`, `last_release_ms`, and the `wait_queue`
-  - `log_mutex`, `simulation_mutex`, `counter_mutex` protect logging, the `running` flag, and the global request counter respectively
-- **`pthread_cond_t`** — coders enqueue a request then block on `dongle->cond`; on release, `pthread_cond_broadcast` wakes all waiters so the scheduler picks the next owner — no busy-waiting
-- **Wait queue** — each dongle holds a queue of `{coder_id, deadline, arrival_order}` records consulted under `dongle->mutex`, making scheduling decisions race-free
-- **Shutdown coordination** — the monitor sets `running = false` under `simulation_mutex` then calls `wake_all()` (broadcasts every dongle's cond), so blocked coders wake, re-check `simulation_is_running()`, and exit cleanly
+* [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
+* [POSIX Threads](https://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html)
+* `pthread_mutex_lock`
+* `pthread_cond_wait`
+* `pthread_cond_broadcast`
+* POSIX thread synchronization documentation
+
+---
+
+
+---
+
+## 👤 Author
+
+**hgawhari**
+
+42 School — Codexion project

@@ -19,7 +19,7 @@ int main(int ac, char **av)
     if (ac != 9)
         return (print_error(STR_ERR_INPUT_COUNT, NULL), 0);
     if (!is_valid_input(&data, av))
-        return (EXIT_FAILURE);
+        return (print_error(STR_ERR_INPUT_VALUE, NULL), 0);
     init_data(&data);
     start_simulation(&data);
     cleanup(&data);
