@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 16:58:33 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/18 10:13:35 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 13:26:09 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
  * Destroy all coder and global mutexes.
  * Called during final program cleanup.
  */
-static void cleanup_mutexes(t_data *data)
+static void	cleanup_mutexes(t_data *data)
 {
-	unsigned int i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < data->number_of_coders)
@@ -29,16 +29,15 @@ static void cleanup_mutexes(t_data *data)
 	pthread_mutex_destroy(&data->log_mutex);
 	pthread_mutex_destroy(&data->simulation_mutex);
 	pthread_mutex_destroy(&data->counter_mutex);
-
 }
 
 /*
  * Destroy dongle mutexes and condition variables.
  * Also frees all pending requests from each wait queue.
  */
-static void cleanup_dongles(t_data *data)
+static void	cleanup_dongles(t_data *data)
 {
-	unsigned int i;
+	unsigned int	i;
 
 	if (!data->dongles)
 		return ;
@@ -50,14 +49,13 @@ static void cleanup_dongles(t_data *data)
 		queue_destroy(&data->dongles[i].wait_queue);
 		i++;
 	}
-
 }
 
 /*
  * Release all allocated simulation resources.
  * Destroys synchronization objects and frees coder/dongle arrays.
  */
-void cleanup(t_data *data)
+void	cleanup(t_data *data)
 {
 	if (!data)
 		return ;

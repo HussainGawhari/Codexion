@@ -6,15 +6,15 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 14:49:54 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 19:19:09 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 13:37:38 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-unsigned long get_time_ms(void)
+unsigned long	get_time_ms(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000UL) + (tv.tv_usec / 1000UL));
@@ -22,15 +22,13 @@ unsigned long get_time_ms(void)
 
 void	ft_usleep(unsigned long ms, t_data *data)
 {
-	unsigned long start_time;
+	unsigned long	start_time;
 
 	start_time = get_time_ms();
 	while (get_time_ms() - start_time < ms)
 	{
-		/* code */
 		if (!simulation_is_running(data))
-			break;
+			break ;
 		usleep(500);
 	}
-
 }

@@ -6,12 +6,11 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 16:52:01 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 19:19:40 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 13:25:53 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
 
 void	log_event(t_data *data, unsigned int id, char *action)
 {

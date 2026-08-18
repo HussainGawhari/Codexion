@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 17:11:57 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/18 10:06:09 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 13:25:14 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,13 @@ void	queue_push(t_queue *q, t_task req)
 		return ;
 	new_node->req = req;
 	new_node->next = NULL;
-
 	previous = NULL;
 	current = q->head;
-
 	while (current && q->cmp(current->req, req) < 0)
 	{
 		previous = current;
 		current = current->next;
 	}
-
 	new_node->next = current;
 	if (previous)
 		previous->next = new_node;

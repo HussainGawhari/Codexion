@@ -21,6 +21,7 @@ SRCS			= \
 				dongle/dongle_order.c \
 				dongle/release_dongles.c \
 				simulation/simulation.c \
+				simulation/simulation_threads.c \
 				queue/queue.c \
 				utils/logger.c \
 				utils/ft_atoi.c \
