@@ -6,12 +6,16 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 16:58:33 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 19:15:49 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 10:13:35 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+/*
+ * Destroy all coder and global mutexes.
+ * Called during final program cleanup.
+ */
 static void cleanup_mutexes(t_data *data)
 {
 	unsigned int i;
@@ -28,6 +32,10 @@ static void cleanup_mutexes(t_data *data)
 
 }
 
+/*
+ * Destroy dongle mutexes and condition variables.
+ * Also frees all pending requests from each wait queue.
+ */
 static void cleanup_dongles(t_data *data)
 {
 	unsigned int i;
@@ -45,7 +53,11 @@ static void cleanup_dongles(t_data *data)
 
 }
 
-void 	cleanup(t_data *data)
+/*
+ * Release all allocated simulation resources.
+ * Destroys synchronization objects and frees coder/dongle arrays.
+ */
+void cleanup(t_data *data)
 {
 	if (!data)
 		return ;

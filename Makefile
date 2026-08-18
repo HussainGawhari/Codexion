@@ -19,8 +19,8 @@ SRCS			= \
 				init/init_dongles.c \
 				monitor/monitor.c \
 				dongle/acquire_dongles.c \
-				dongle/dongle_queue.c \
-				dongle/release_dongle.c \
+				dongle/dongle_order.c \
+				dongle/release_dongles.c \
 				simulation/simulation.c \
 				queue/queue.c \
 				utils/logger.c \
