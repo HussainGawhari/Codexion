@@ -1,7 +1,6 @@
 NAME		= codexion
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -pthread -Iinclude
-MAKEFLAGS	= --no-print-directory
 
 SRCS_DIR	= src
 OBJS_DIR	= obj
