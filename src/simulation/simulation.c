@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 19:47:05 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/17 19:57:26 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 11:13:30 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
     * Locks the mutex before reading data->running, because multiple threads can access it
 
 */
-
 int simulation_is_running(t_data *data)
 {
 	int running;
@@ -35,7 +34,7 @@ int simulation_is_running(t_data *data)
     * Each coders has it's own conditional variables
     * pthread_cond_broadcast(&data->dongles[i].cond) wakes all threads waiting on that dongle's condition variable.
     * once all threads awaken so it checks [ pthread_con_wait() ]
-    * 
+    *
 */
 void wake_all_dongles(t_data *data)
 {
@@ -62,7 +61,6 @@ void wake_all_dongles(t_data *data)
     * finally the main thread waits for the monitor thread to finish
     * coder_routine, &data->coders[i-1] this is argument that passed to codeer_routine.
 */
-
 void start_simulation(t_data *data)
 {
     unsigned int i;

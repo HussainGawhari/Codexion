@@ -6,11 +6,12 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:38 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/17 18:40:47 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 11:12:34 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
 
 /*
     * This function prepares all the shared resources so thread can use them later
@@ -22,7 +23,6 @@
     * pthread_cond_init allows coders to wait when dongles are not available
     * every dongle has it's own queue and cmp tells that queue how to order requests.
 */
-
 void init_dongles(t_data *data)
 {
     unsigned int i;

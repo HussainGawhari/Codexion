@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/29 07:48:38 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/16 14:03:37 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 11:13:05 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 *   if both string are not equal it will return non zero
 
 */
-
 static int	ft_strcmp(char *s1, char *s2)
 {
 	while (*s1 && *s2 && *s1 == *s2)
@@ -50,7 +49,6 @@ static bool is_positive_integer(const char *str)
  * return true if everything goes well
  * stop if memory allocation fails
  */
-
 static bool parse_data(t_data *data, int *args)
 {
     data->coders = malloc(sizeof(t_coder) * args[0]);
@@ -83,7 +81,6 @@ static bool parse_data(t_data *data, int *args)
 *	of philosophers is valid (between 1 and MAX_PHILOS).
 *	Returns true if all arguments are valid, false if one of them is invalid.
 */
-
 bool is_valid_input(t_data *data, char **av)
 {
     int parsed_args[8];

@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:38:43 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/17 18:57:22 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 11:11:57 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
     * Create mutex for each coder to safly access share coder data.
 
 */
-
 void	init_coders(t_data *data)
 {
 	 unsigned int i;

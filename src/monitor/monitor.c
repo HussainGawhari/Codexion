@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 14:56:05 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/18 07:52:09 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/18 11:12:55 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 /*
 	This function is called when check_burnout() detects that a coder has exceeded the burnout time.
 */
-
 static void	handle_burnout(t_data *data, unsigned int idx, unsigned long now)
 {
 	pthread_mutex_lock(&data->log_mutex);
@@ -31,7 +30,6 @@ static void	handle_burnout(t_data *data, unsigned int idx, unsigned long now)
 	This function checks every coder to see whether they have burned out.
 	It goes through all coders one by one
 */
-
 static void	check_burnout(t_data *data)
 {
 	unsigned int	i;
@@ -58,9 +56,8 @@ static void	check_burnout(t_data *data)
 
 /*
 	This function checks whether all coders have completed their required compilations.
-	Detect that the simulation has successfully finished and stop it.	
+	Detect that the simulation has successfully finished and stop it.
 */
-
 static void	check_simulation_complete(t_data *data)
 {
 	unsigned int	i;
@@ -89,7 +86,6 @@ static void	check_simulation_complete(t_data *data)
 	* It checks the coders' timing and determines whether a coder has exceeded
 	* if someone burnout eventually it set to data->runign = false
 */
-
 void	*monitor_simulation(void *arg)
 {
 	t_data	*data;

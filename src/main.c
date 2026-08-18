@@ -12,6 +12,9 @@
 
 #include "codexion.h"
 
+/*
+    *Entery point to the codexion
+*/
 int main(int ac, char **av)
 {
     t_data data;
