@@ -5,8 +5,6 @@
 ## Table of Contents
 
 - [Description](#description)
-- [Features](#features)
-- [Requirements](#requirements)
 - [Instructions](#instructions)
 - [Command-line arguments](#command-line-arguments)
 - [Concurrency and synchronization](#concurrency-and-synchronization)
@@ -148,63 +146,6 @@ The scheduler compares the deadlines to determine priority.
 
 When deadlines are equal, the scheduler uses the project's defined
 tie-breaking rule.
-
-
-# 🏗️ Architecture
-
-The simulation is organized around four main concepts:
-
-```text
-                    ┌──────────────────┐
-                    │      t_data      │
-                    │   global state   │
-                    └────────┬─────────┘
-                             │
-              ┌──────────────┴──────────────┐
-              │                             │
-       ┌──────▼──────┐               ┌──────▼──────┐
-       │   Coders    │               │   Dongles   │
-       │  pthreads   │               │   resources │
-       └──────┬──────┘               └──────┬──────┘
-              │                             │
-              │ requests                    │
-              └─────────────┬───────────────┘
-                            │
-                     ┌──────▼──────┐
-                     │ Wait Queue  │
-                     │             │
-                     │ FIFO/EDF/   │
-                     └─────────────┘
-```
-
-### Coder
-
-Each coder has:
-
-* A unique ID
-* Compilation counter
-* Last compilation timestamp
-* Two associated dongles
-* A pthread
-* A mutex
-* A reference to global simulation data
-
-### Dongle
-
-Each dongle has:
-
-* Its own mutex
-* Availability state
-* Last release timestamp
-* Its own waiting queue
-* A condition variable
-
-### Queue
-
-Each dongle maintains a linked-list waiting queue containing scheduling
-requests.
-
----
 
 # 🔧 Concurrency and synchronization
 
@@ -413,34 +354,19 @@ A coder repeatedly performs:
 
 # 🧪 Testing
 
-The project includes a `tests/` directory for shell-based tests.
-
 Useful manual tests include:
 
 ### Basic FIFO
 
 ```bash
-./codexion 2 2000 200 200 200 2 0 fifo
+./codexion 5 2000 200 200 200 2 0 fifo
 ```
 
 ### EDF contention
 
 ```bash
-./codexion 5 3000 200 200 200 10 800 edf
+./codexion 5 3000 200 200 200 5 200 edf
 ```
-
-### Cooldown
-
-```bash
-./codexion 5 3000 200 200 200 5 800 fifo
-```
-
-### Burnout
-
-Use a small burnout time relative to the workload to verify that the monitor
-detects missed deadlines.
-
----
 
 # 📚 Resources
 
@@ -450,14 +376,3 @@ detects missed deadlines.
 * `pthread_cond_wait`
 * `pthread_cond_broadcast`
 * POSIX thread synchronization documentation
-
----
-
-
----
-
-## 👤 Author
-
-**hgawhari**
-
-42 School — Codexion project

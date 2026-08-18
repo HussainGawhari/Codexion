@@ -6,11 +6,19 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 11:38:43 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 10:17:14 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/17 18:57:22 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+/*
+    * Initializes every coders and connect to its' two neighboring dongles
+    * loops through every coder and give id to it
+    * The indexes are used later to determine which dongle should be aquired first.
+    * Create mutex for each coder to safly access share coder data.
+
+*/
 
 void	init_coders(t_data *data)
 {

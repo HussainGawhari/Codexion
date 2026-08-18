@@ -6,11 +6,22 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:38 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/16 14:03:56 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/17 18:40:47 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+/*
+    * This function prepares all the shared resources so thread can use them later
+    * This function initilize every dongle before simulation starts
+    * since we have 1 dongle per coder so the number dongle == no of coders
+    * cmp is pointer function that point to the function recevies two struct and return int
+    * every dongle has its' own mutex that protext dongles from simultaneous access.
+    * coder is the thread and only one thread should dongle's protected states at the time
+    * pthread_cond_init allows coders to wait when dongles are not available
+    * every dongle has it's own queue and cmp tells that queue how to order requests.
+*/
 
 void init_dongles(t_data *data)
 {

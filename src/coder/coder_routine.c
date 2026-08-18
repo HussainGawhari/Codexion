@@ -12,6 +12,10 @@
 
 #include "codexion.h"
 
+/*
+	* This is the function which make coders acquire dongles and compile release and repeat
+*/
+
 static int compile_cycle(t_coder *coder, t_data *data)
 {
 	if (!acquire_dongles(coder, data))
@@ -31,6 +35,10 @@ static int compile_cycle(t_coder *coder, t_data *data)
 	pthread_mutex_unlock(&coder->mutex);
 	return 1;
 }
+
+/*
+	* This function controles the coder work cycles
+*/
 
 void	*coder_routine(void *arg)
 {

@@ -6,12 +6,19 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 19:47:05 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/10 19:52:12 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/17 19:57:26 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "codexion.h"
+
+/*
+    * Safely reads the shared running flag.
+    * Check wether the simulation still running
+    * Locks the mutex before reading data->running, because multiple threads can access it
+
+*/
 
 int simulation_is_running(t_data *data)
 {
@@ -23,7 +30,14 @@ int simulation_is_running(t_data *data)
 	return (running);
 }
 
-void check_simulation_end(t_data *data)
+/*
+    * Wakes up all the coders that might be currently waiting
+    * Each coders has it's own conditional variables
+    * pthread_cond_broadcast(&data->dongles[i].cond) wakes all threads waiting on that dongle's condition variable.
+    * once all threads awaken so it checks [ pthread_con_wait() ]
+    * 
+*/
+void wake_all_dongles(t_data *data)
 {
     unsigned int i;
 
@@ -39,6 +53,16 @@ void check_simulation_end(t_data *data)
 
 }
 
+/*
+    * This function starts and manages simulations
+    * Store the moment of that simulation starts
+    * initialized coders time stamps
+    * Creates a separate thread responsible for monitoring the simulation, especially burnout conditions
+    * pthread_join() makes the main thread wait until each coder finishes
+    * finally the main thread waits for the monitor thread to finish
+    * coder_routine, &data->coders[i-1] this is argument that passed to codeer_routine.
+*/
+
 void start_simulation(t_data *data)
 {
     unsigned int i;
@@ -53,11 +77,17 @@ void start_simulation(t_data *data)
     data->running = true;
     pthread_create(&data->monitor_thread, NULL, monitor_simulation, data);
     i = 0;
-    while ( i++ < data->number_of_coders)
+    while (i < data->number_of_coders)
     {
-        pthread_create(&data->coders[i-1].thread, NULL, coder_routine, &data->coders[i-1]);
+        pthread_create(
+            &data->coders[i].thread,
+            NULL,
+            coder_routine,
+            &data->coders[i]
+        );
+        i++;
     }
-    check_simulation_end(data);
+    wake_all_dongles(data);
     i = 0;
     while (i < data->number_of_coders)
     {

@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:27 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/16 13:47:22 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/17 19:38:24 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ void *coder_routine(void *arg);
 
 /* Internal to main.c (declared here only if you need it elsewhere) */
 void start_simulation(t_data *data);
-void check_simulation_end(t_data *data);
+void wake_all_dongles(t_data *data);
 
 /* ================================ Queue ================================= */
 
