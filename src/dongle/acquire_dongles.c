@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 15:58:16 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/18 17:51:13 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/20 12:45:17 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,11 @@ static void	get_dongle(t_coder *coder, t_data *data, t_dongle *dongle)
 	pthread_mutex_lock(&data->counter_mutex);
 	req.arrival_order = data->request_counter++;
 	pthread_mutex_unlock(&data->counter_mutex);
+	
+	pthread_mutex_lock(&coder->mutex);
+	coder->last_compile_ms = get_time_ms();
+	pthread_mutex_unlock(&coder->mutex);
+	
 	pthread_mutex_lock(&dongle->mutex);
 	queue_push(&dongle->wait_queue, req);
 	while (simulation_is_running(data) && (!can_take(dongle, coder->id)

@@ -37,12 +37,12 @@ OBJS		= $(addprefix $(OBJS_DIR)/,$(SRCS:.c=.o))
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@printf "  $(GREEN)LD$(RESET)  %s\n" $@
+	@printf "  $(GREEN)Linking$(RESET)  %s\n" $@
 	@$(CC) $(OBJS) -o $(NAME) -pthread
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	@mkdir -p $(dir $@)
-	@printf "  $(BLUE)CC$(RESET)  %s\n" $<
+	@printf "  $(BLUE)Compiled$(RESET)  %s\n" $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
