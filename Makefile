@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/08/21 13:35:04 by hgawhari          #+#    #+#              #
+#    Updated: 2026/08/21 13:35:53 by hgawhari         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME		= codexion
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -pthread -Iinclude
@@ -14,8 +26,8 @@ SRCS			= \
 				main.c \
 				parsing/parsing.c \
 				init/init_data.c \
-				init/init_coders.c \
-				init/init_dongles.c \
+				coder/init_coders.c \
+				dongle/init_dongles.c \
 				monitor/monitor.c \
 				dongle/acquire_dongles.c \
 				dongle/dongle_order.c \

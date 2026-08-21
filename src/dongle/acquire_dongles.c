@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 15:58:16 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/20 12:45:17 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/21 13:39:44 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,34 +53,9 @@ static void	wait_cooldown(t_dongle *dongle, t_data *data)
 	pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &ts);
 }
 
-//static void	wait_cooldown(t_dongle *dongle, t_data *data)
-//{
-//	struct timeval	tv;
-//	struct timespec	ts;
-//	unsigned long	elapsed;
-//	unsigned long	remaining;
-
-//	elapsed = get_time_ms() - dongle->last_release_ms;
-//	if (elapsed >= data->dongle_cooldown)
-//		return ;
-//	remaining = data->dongle_cooldown - elapsed;
-//	gettimeofday(&tv, NULL);
-//	ts.tv_sec = tv.tv_sec + remaining / 1000;
-//	ts.tv_nsec = tv.tv_usec * 1000
-//		+ (remaining % 1000) * 1000000;
-//	if (ts.tv_nsec >= 1000000000L)
-//	{
-//		ts.tv_sec++;
-//		ts.tv_nsec -= 1000000000L;
-//	}
-//	pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &ts);
-//}
-
 /*
- * Create and enqueue the coder's dongle request.
- * Wait until the scheduler selects the coder and the dongle is ready.
- */
-
+	* Just check if the dongle cooldowned
+*/
 int	is_dongle_ready(t_dongle *dongle, t_data *data)
 {
 	unsigned long	elapsed;
