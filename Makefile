@@ -6,7 +6,7 @@
 #    By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/08/21 13:35:04 by hgawhari          #+#    #+#              #
-#    Updated: 2026/08/21 13:35:53 by hgawhari         ###   ########.fr        #
+#    Updated: 2026/08/22 12:25:53 by hgawhari         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRCS			= \
 				dongle/init_dongles.c \
 				monitor/monitor.c \
 				dongle/acquire_dongles.c \
+				dongle/dongle_utils.c \
 				dongle/dongle_order.c \
 				dongle/release_dongles.c \
 				simulation/simulation.c \

@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/23 16:06:27 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/18 17:49:54 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/22 12:31:11 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,11 @@ void				queue_destroy(t_queue *q);
 /* =========================== Dongle/Queue helpers ======================== */
 
 bool				acquire_dongles(t_coder *coder, t_data *data);
+int					can_take_pair(t_coder *coder, t_dongle *first,
+						t_dongle *second, t_data *data);
+int					can_take(t_dongle *dongle, unsigned int coder_id);
+void				wait_for_dongle(t_dongle *dongle, t_coder *coder,
+						t_data *data);
 void				release_dongles_for_coder(t_coder *coder);
 void				get_left_right_dongles(t_coder *coder, t_dongle **first,
 						t_dongle **second);

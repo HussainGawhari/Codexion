@@ -6,7 +6,7 @@
 /*   By: hgawhari <hgawhari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 16:42:20 by hgawhari          #+#    #+#             */
-/*   Updated: 2026/08/20 12:44:29 by hgawhari         ###   ########.fr       */
+/*   Updated: 2026/08/22 12:07:56 by hgawhari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ static int	compile_cycle(t_coder *coder, t_data *data)
 {
 	if (!acquire_dongles(coder, data))
 		return (0);
-
 	log_event(data, coder->id, "is compiling");
 	ft_usleep(data->time_to_compile, data);
 	release_dongles_for_coder(coder);
 	pthread_mutex_lock(&coder->mutex);
+	coder->last_compile_ms = get_time_ms();
 	coder->compiles_done++;
 	pthread_mutex_unlock(&coder->mutex);
 	return (1);
